@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-mongo-depl
+spec:
+  # copies of images to run
+  replicas: 1
+  # helps find deployment find the pods with the label name
+  selector:
+    matchLabels:
+      app: auth-mongo
+  # how to create each individual pods that this deployment will create
+  template:
+    metadata:
+      labels:
+        # this app name has to match the app name that of selector
+        app: auth-mongo
+    # tells pod how to behave
+    spec:
+      containers:
+        # this is only for logging purposes
+        - name: auth-mongo
+          # below image comes from docker hub
+          image: mongo
+
+# tells docker this is a second object
+---
+# most of the time, we create one-to-one relation between service and deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-mongo-srv
+
+spec:
+  # by default, cluster ip service is created
+  # so we did not define the type of service
+  selector:
+    # finds all the pods with app name "auth-mongo"
+    app: auth-mongo
+  # lists all the ports that we have to access to in this pod
+  ports:
+    - name: db
+      protocol: TCP
+      # this is a default port for the mongo
+      port: 27017
+      targetPort: 27017
