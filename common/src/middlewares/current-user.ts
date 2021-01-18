@@ -18,7 +18,7 @@ declare global {
 
 // checks whether the user is logged in or not
 // if logged it, sets the req.currentUser property to the payload
-export const currentUserManager = (
+export const currentUser = (
   req: Request,
   res: Response,
   next: NextFunction
