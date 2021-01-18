@@ -16,9 +16,13 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
 
 AppComponent.getInitialProps = async (appContext) => {
   const client = buildClient(appContext.ctx);
+  // this data is for the custom app component
   const { data } = await client.get("/api/users/currentuser");
 
+  // invoking getinitialproprs in app component makes getinitialprops of pages component non-usable
+  // so we have to pass down the ctx down the heirarchy tree to the individual components
   let pageProps = {};
+  // only if the pages component has getInitialProps
   if (appContext.Component.getInitialProps) {
     pageProps = await appContext.Component.getInitialProps(appContext.ctx);
   }
