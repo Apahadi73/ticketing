@@ -21,3 +21,12 @@ build:
           # sync all the files ending with ts extension
           - src: "src/**/*.ts"
             dest: .
+
+    - image: apahadi73/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .

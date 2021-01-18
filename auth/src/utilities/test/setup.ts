@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import request from "supertest";
-import { app } from "../app";
+import { app } from "../../app";
 
 // we are augmenting the global object with sign in helper function
 declare global {
