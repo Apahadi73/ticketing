@@ -16,7 +16,7 @@ const start = async () => {
     });
     console.log("Connected to mongodb");
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
   // listner
   app.listen(3000, () => {
