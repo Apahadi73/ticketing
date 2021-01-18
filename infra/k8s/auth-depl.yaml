@@ -23,6 +23,9 @@ spec:
           # our custom build images
           image: apahadi73/auth
           env:
+            - name: MONGO_URI
+              # not an issue since we are not using credentials to use the mongodb server
+              value: "mongodb://auth-mongo-srv:27017/auth"
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

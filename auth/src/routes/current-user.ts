@@ -1,11 +1,10 @@
+import { currentUser } from "@mgktickets/common";
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { currentUserManager } from "../middlewares/current-user";
-import { requireAuth } from "../middlewares/require-auth";
 
 const router = express.Router();
 
-router.get("/api/users/currentUser", currentUserManager, (req, res) => {
+router.get("/api/users/currentUser", currentUser, (req, res) => {
   res.send({ currentUser: req.currentUser || null });
 });
 
