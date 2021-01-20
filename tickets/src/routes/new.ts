@@ -1,8 +1,8 @@
 import { requireAuth } from "@mgktickets/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { validatesRequest } from "../../../common/src/middlewares/validate-request";
 import { Ticket } from "../models/ticket";
+import { validatesRequest } from "@mgktickets/common";
 
 const router = express.Router();
 
