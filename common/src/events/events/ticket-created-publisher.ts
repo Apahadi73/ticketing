@@ -1,4 +1,4 @@
-import { TicketCreatedEvent } from "../../../build/events/tickets-srv-events/ticket-created-event";
+import { TicketCreatedEvent } from "../tickets-srv-events/ticket-created-event";
 import { Subjects } from "../types/subjects";
 import { Publisher } from "../bases/publisher";
 
