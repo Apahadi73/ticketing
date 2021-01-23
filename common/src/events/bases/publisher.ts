@@ -1,11 +1,12 @@
 import { Message, Stan } from "node-nats-streaming";
 import { Subjects } from "../types/subjects";
+import { Event } from "./listener";
 
-// generic event interface
-export interface Event {
-  subject: Subjects;
-  data: any;
-}
+// // generic event interface
+// export interface Event {
+//   subject: Subjects;
+//   data: any;
+// }
 
 export abstract class Publisher<T extends Event> {
   abstract subject: T["subject"];
