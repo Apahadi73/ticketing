@@ -1,5 +1,4 @@
 import { Message, Stan } from "node-nats-streaming";
-import { Subjects } from "../types/subjects";
 import { Event } from "./listener";
 
 // // generic event interface

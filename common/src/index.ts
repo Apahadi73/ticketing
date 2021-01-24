@@ -14,6 +14,7 @@ export * from "./middlewares/validate-request";
 export * from "./events/bases/publisher";
 export * from "./events/bases/listener";
 
+export * from "./events/types/order-status";
 export * from "./events/types/subjects";
 
 export * from "./events/tickets-srv-events/ticket-created-event";
