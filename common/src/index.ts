@@ -19,3 +19,6 @@ export * from "./events/types/subjects";
 
 export * from "./events/tickets-srv-events/ticket-created-event";
 export * from "./events/tickets-srv-events/ticket-updated-event";
+
+export * from "./events/order-srv-events/order-cancelled-event";
+export * from "./events/order-srv-events/order-created-event";
