@@ -22,3 +22,5 @@ export * from "./events/tickets-srv-events/ticket-updated-event";
 
 export * from "./events/order-srv-events/order-cancelled-event";
 export * from "./events/order-srv-events/order-created-event";
+
+export * from "./events/expiration-srv-events/expiration-complete-event";
