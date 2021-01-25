@@ -12,7 +12,7 @@ export abstract class Listener<T extends Event> {
   abstract queueGroupName: string;
   abstract onMessage(data: T["data"], msg: Message): void;
   // object that subscripts to the NATS publisher
-  private client: Stan;
+  protected client: Stan;
   // protect here means subclass can define it
   protected ackWait = 5000; //5 seconds
 

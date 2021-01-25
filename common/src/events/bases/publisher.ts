@@ -9,7 +9,7 @@ import { Event } from "./listener";
 
 export abstract class Publisher<T extends Event> {
   abstract subject: T["subject"];
-  private client: Stan;
+  protected client: Stan;
 
   // constructor
   constructor(client: Stan) {
