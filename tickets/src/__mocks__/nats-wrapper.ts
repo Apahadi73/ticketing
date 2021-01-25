@@ -1,5 +1,4 @@
-// we are using this fake implementation of nats provider for jest test
-export const natsProvider = {
+export const natsWrapper = {
   client: {
     publish: jest
       .fn()

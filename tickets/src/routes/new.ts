@@ -1,16 +1,15 @@
-import { requireAuth } from "@mgktickets/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
+import { requireAuth, validatesRequest } from "@mgktickets/common";
 import { Ticket } from "../models/ticket";
-import { validatesRequest } from "@mgktickets/common";
-import { natsProvider } from "../nats-provider";
-import { TicketCreatedPublisher } from "../events/ticket-created-publisher";
+import { TicketCreatedPublisher } from "../events/publishers/ticket-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
-// creates new ticket
 router.post(
   "/api/tickets",
+  requireAuth,
   [
     body("title").not().isEmpty().withMessage("Title is required"),
     body("price")
@@ -19,17 +18,15 @@ router.post(
   ],
   validatesRequest,
   async (req: Request, res: Response) => {
-    // receives price and title from the request body
     const { title, price } = req.body;
 
-    // creates new ticket
     const ticket = Ticket.build({
       title,
       price,
       userId: req.currentUser!.id,
     });
     await ticket.save();
-    await new TicketCreatedPublisher(natsProvider.client).publish({
+    new TicketCreatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,

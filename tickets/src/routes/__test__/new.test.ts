@@ -1,13 +1,16 @@
 import request from "supertest";
 import { app } from "../../app";
 import { Ticket } from "../../models/ticket";
-// nats-provider mock file
-jest.mock("../../nats-provider");
+import { natsWrapper } from "../../nats-wrapper";
 
 it("has a route handler listening to /api/tickets for post requests", async () => {
   const response = await request(app).post("/api/tickets").send({});
 
   expect(response.status).not.toEqual(404);
+});
+
+it("can only be accessed if the user is signed in", async () => {
+  await request(app).post("/api/tickets").send({}).expect(401);
 });
 
 it("returns a status other than 401 if the user is signed in", async () => {
@@ -76,4 +79,19 @@ it("creates a ticket with valid inputs", async () => {
   expect(tickets.length).toEqual(1);
   expect(tickets[0].price).toEqual(20);
   expect(tickets[0].title).toEqual(title);
+});
+
+it("publishes an event", async () => {
+  const title = "asldkfj";
+
+  await request(app)
+    .post("/api/tickets")
+    .set("Cookie", global.signin())
+    .send({
+      title,
+      price: 20,
+    })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

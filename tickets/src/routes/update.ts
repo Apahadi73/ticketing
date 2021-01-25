@@ -7,8 +7,8 @@ import {
   NotAuthorizedError,
 } from "@mgktickets/common";
 import { Ticket } from "../models/ticket";
-import { TicketUpdatedPublisher } from "../events/ticket-updated-publisher";
-import { natsProvider } from "../nats-provider";
+import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -29,7 +29,6 @@ router.put(
       throw new NotFoundError();
     }
 
-    // only allows creator of the ticket to update the ticket
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
     }
@@ -39,8 +38,7 @@ router.put(
       price: req.body.price,
     });
     await ticket.save();
-    // publishes the updated ticket to the nats channel
-    new TicketUpdatedPublisher(natsProvider.client).publish({
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
