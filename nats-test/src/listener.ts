@@ -1,6 +1,6 @@
 import nats from "node-nats-streaming";
 import { randomBytes } from "crypto";
-import { TicketCreatedListner } from "./events/ticket-created-listner";
+import { TicketCreatedListner } from "./events/events/ticket-created-listner";
 
 console.clear();
 // creates random client id for the STAN lister objecy
@@ -11,7 +11,7 @@ const stan = nats.connect("ticketing", clientId, {
 });
 
 stan.on("connect", () => {
-  console.log("Listener " + clientId + " connected to NATS");
+  console.log("Listener with id:" + clientId + " connected to NATS");
 
   stan.on("close", () => {
     console.log("NATS connection closed!");
@@ -22,6 +22,11 @@ stan.on("connect", () => {
   new TicketCreatedListner(stan).listen();
 });
 
+stan.on("close", () => {
+  console.log("reached here");
+  console.log("NATS connection closed!");
+  process.exit();
+});
 // watches for signal interrupt and termination
 process.on("SIGINT", () => stan.close());
 process.on("SIGTERM", () => stan.close());

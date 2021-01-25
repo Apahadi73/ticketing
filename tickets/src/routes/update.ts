@@ -7,6 +7,8 @@ import {
   NotAuthorizedError,
 } from "@mgktickets/common";
 import { Ticket } from "../models/ticket";
+import { TicketUpdatedPublisher } from "../events/ticket-updated-publisher";
+import { natsProvider } from "../nats-provider";
 
 const router = express.Router();
 
@@ -37,6 +39,14 @@ router.put(
       price: req.body.price,
     });
     await ticket.save();
+    // publishes the updated ticket to the nats channel
+    new TicketUpdatedPublisher(natsProvider.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      version: ticket.version,
+    });
 
     res.send(ticket);
   }

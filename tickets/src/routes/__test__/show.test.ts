@@ -1,6 +1,8 @@
 import request from "supertest";
 import { app } from "../../app";
 import mongoose from "mongoose";
+// nats-provider mock file
+jest.mock("../../nats-provider");
 
 it("returns a 404 if the ticket is not found", async () => {
   // we need this id when we have to find the object by id

@@ -1,7 +1,7 @@
-import { TicketCreatedEvent } from "../../../common/src/events/tickets-srv-events/ticket-created-event";
 import { Message } from "node-nats-streaming";
-import { Listener } from "../../../common/src/events/bases/base-listner";
-import { Subjects } from "../../../common/src/errors/subjects";
+import { TicketCreatedEvent } from "../../../../common/src/events/tickets-srv-events/ticket-created-event";
+import { Subjects } from "../../../../common/src/events/types/subjects";
+import { Listener } from "../bases/listener";
 
 // creates new TicketCreatedListner object and listens to the subscription channel of "ticket:created"
 export class TicketCreatedListner extends Listener<TicketCreatedEvent> {

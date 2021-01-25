@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface TicketAttrs {
   title: string;
@@ -7,9 +8,10 @@ interface TicketAttrs {
 }
 
 interface TicketDoc extends mongoose.Document {
-  title: number;
+  title: string;
   price: number;
   userId: string;
+  version: number;
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
@@ -40,6 +42,11 @@ const ticketSchema = new mongoose.Schema(
     },
   }
 );
+
+//tells mongoose to use "version" as key to track version
+ticketSchema.set("versionKey", "version");
+// injects our OCC plugin
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket(attrs);

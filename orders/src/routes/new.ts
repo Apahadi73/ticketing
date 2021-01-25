@@ -61,6 +61,7 @@ router.post(
       id: order.id,
       status: order.status,
       userId: order.userId,
+      version: order.ticket.version,
       // uses utc timestamp
       expiresAt: order.expiresAt.toISOString(),
       ticket: {

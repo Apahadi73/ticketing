@@ -1,5 +1,5 @@
 import nats from "node-nats-streaming";
-import { TicketCreatedPublisher } from "./events/ticket-created-publisher";
+import { TicketCreatedPublisher } from "../../tickets/src/events/ticket-created-publisher";
 
 console.clear();
 
@@ -16,6 +16,7 @@ stan.on("connect", async () => {
     id: "123",
     title: "concert",
     price: 20,
+    userId: "Hari",
   };
   const publisher = new TicketCreatedPublisher(stan);
   try {

@@ -1,5 +1,7 @@
 import request from "supertest";
 import { app } from "../../app";
+// nats-provider mock file
+jest.mock("../../nats-provider");
 
 // creates dummy tickets for us in the backend
 const createTicket = () => {
