@@ -12,7 +12,6 @@ router.get(
   "/api/orders/:orderId",
   requireAuth,
   async (req: Request, res: Response) => {
-    // find the order and simultaneously fetch the associated ticket
     const order = await Order.findById(req.params.orderId).populate("ticket");
 
     if (!order) {
