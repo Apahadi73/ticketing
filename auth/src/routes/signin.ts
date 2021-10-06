@@ -1,60 +1,55 @@
-import express, { Request, Response } from "express";
-import { validatesRequest, BadRequestError } from "@mgktickets/common";
-import { body } from "express-validator";
-import jwt from "jsonwebtoken";
-import { User } from "../models/user";
-import { Password } from "../utilities/password";
+import express, { Request, Response } from 'express';
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { validateRequest, BadRequestError } from '@cygnetops/common';
+
+import { Password } from '../services/password';
+import { User } from '../models/user';
 
 const router = express.Router();
 
 router.post(
-  "/api/users/signin",
+  '/api/users/signin',
   [
-    // we use the body middleware to validate the body of the request body
-    body("email").isEmail().withMessage("Invalid Email"),
-    body("password").trim().notEmpty().withMessage("Enter the valid password"),
-  ], // validates the request after the previous middleware
-  // but before the final middleware
-  validatesRequest,
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('password')
+      .trim()
+      .notEmpty()
+      .withMessage('You must supply a password'),
+  ],
+  validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    // checks if the user already exists in the db
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
-      throw new BadRequestError("Invalid email or password");
+      throw new BadRequestError('Invalid credentials');
     }
 
-    // if the user exists in the db
-
-    // verfies the password from the user
-    const passwordMatch = await Password.compare(
+    const passwordsMatch = await Password.compare(
       existingUser.password,
       password
     );
-    if (!passwordMatch) {
-      throw new BadRequestError("Invalid email or password");
+    if (!passwordsMatch) {
+      throw new BadRequestError('Invalid Credentials');
     }
 
-    // Generates JWT
-    const existingUserJwt = jwt.sign(
-      // payload
+    // Generate JWT
+    const userJwt = jwt.sign(
       {
         id: existingUser.id,
         email: existingUser.email,
       },
-      // secret key
       process.env.JWT_KEY!
     );
 
-    // Stores it on the session object
+    // Store it on session object
     req.session = {
-      jwt: existingUserJwt,
+      jwt: userJwt,
     };
 
     res.status(200).send(existingUser);
   }
 );
 
-// we are renaming the router to avoid name collisions
 export { router as signinRouter };

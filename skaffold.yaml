@@ -1,28 +1,22 @@
 apiVersion: skaffold/v2alpha3
 kind: Config
-# list all the config files we want to load into our clusters
 deploy:
   kubectl:
     manifests:
       - ./infra/k8s/*
 build:
   local:
-    #don't push image to dockerhub when building the image which is the default
     push: false
-  # these are the things going to be built
   artifacts:
-    - image: apahadi73/auth
+    - image: cygnetops/auth
       context: auth
       docker:
         dockerfile: Dockerfile
-      # tells skaffold how to handle the changes in sub-directory's file
       sync:
         manual:
-          # sync all the files ending with ts extension
           - src: "src/**/*.ts"
             dest: .
-
-    - image: apahadi73/client
+    - image: cygnetops/ticketing-client
       context: client
       docker:
         dockerfile: Dockerfile
@@ -30,8 +24,7 @@ build:
         manual:
           - src: "**/*.js"
             dest: .
-
-    - image: apahadi73/tickets
+    - image: cygnetops/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile
@@ -39,8 +32,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-
-    - image: apahadi73/orders
+    - image: cygnetops/orders
       context: orders
       docker:
         dockerfile: Dockerfile
@@ -48,8 +40,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-
-    - image: apahadi73/expiration
+    - image: cygnetops/expiration
       context: expiration
       docker:
         dockerfile: Dockerfile
@@ -57,8 +48,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-
-    - image: apahadi73/payments
+    - image: cygnetops/payments
       context: payments
       docker:
         dockerfile: Dockerfile

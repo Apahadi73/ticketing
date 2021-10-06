@@ -1,32 +1,23 @@
-import nats from "node-nats-streaming";
-import { randomBytes } from "crypto";
-import { TicketCreatedListner } from "./events/events/ticket-created-listner";
+import nats from 'node-nats-streaming';
+import { randomBytes } from 'crypto';
+import { TicketCreatedListener } from './events/ticket-created-listener';
 
 console.clear();
-// creates random client id for the STAN lister objecy
-const clientId = randomBytes(4).toString("hex");
 
-const stan = nats.connect("ticketing", clientId, {
-  url: "http://localhost:4222",
+const stan = nats.connect('ticketing', randomBytes(4).toString('hex'), {
+  url: 'http://localhost:4222',
 });
 
-stan.on("connect", () => {
-  console.log("Listener with id:" + clientId + " connected to NATS");
+stan.on('connect', () => {
+  console.log('Listener connected to NATS');
 
-  stan.on("close", () => {
-    console.log("NATS connection closed!");
+  stan.on('close', () => {
+    console.log('NATS connection closed!');
     process.exit();
   });
 
-  // creates new TicketCreatedListner object and listens to the subscription channel of "ticket:created"
-  new TicketCreatedListner(stan).listen();
+  new TicketCreatedListener(stan).listen();
 });
 
-stan.on("close", () => {
-  console.log("reached here");
-  console.log("NATS connection closed!");
-  process.exit();
-});
-// watches for signal interrupt and termination
-process.on("SIGINT", () => stan.close());
-process.on("SIGTERM", () => stan.close());
+process.on('SIGINT', () => stan.close());
+process.on('SIGTERM', () => stan.close());

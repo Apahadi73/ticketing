@@ -14,16 +14,15 @@ spec:
     spec:
       containers:
         - name: expiration
-          image: apahadi73/expiration
+          image: cygnetops/expiration
           env:
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_URL
-              value: "http://nats-srv:4222"
+              value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: ticketing
-              # tells expiration depl how to connect to redis
             - name: REDIS_HOST
               value: expiration-redis-srv

@@ -1,10 +1,12 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-const header = ({ currentUser }) => {
+export default ({ currentUser }) => {
   const links = [
-    !currentUser && { label: "Sign Up", href: "/auth/signup" },
-    !currentUser && { label: "Sign In", href: "/auth/signin" },
-    currentUser && { label: "Sign Out", href: "/auth/signout" },
+    !currentUser && { label: 'Sign Up', href: '/auth/signup' },
+    !currentUser && { label: 'Sign In', href: '/auth/signin' },
+    currentUser && { label: 'Sell Tickets', href: '/tickets/new' },
+    currentUser && { label: 'My Orders', href: '/orders' },
+    currentUser && { label: 'Sign Out', href: '/auth/signout' },
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, href }) => {
@@ -18,7 +20,7 @@ const header = ({ currentUser }) => {
     });
 
   return (
-    <nav className="navbar navbar-dark bg-dark">
+    <nav className="navbar navbar-light bg-light">
       <Link href="/">
         <a className="navbar-brand">GitTix</a>
       </Link>
@@ -29,4 +31,3 @@ const header = ({ currentUser }) => {
     </nav>
   );
 };
-export default header;

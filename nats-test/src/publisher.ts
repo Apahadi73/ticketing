@@ -1,28 +1,33 @@
-import nats from "node-nats-streaming";
-import { TicketCreatedPublisher } from "../../tickets/src/events/ticket-created-publisher";
+import nats from 'node-nats-streaming';
+import { TicketCreatedPublisher } from './events/ticket-created-publisher';
 
 console.clear();
 
-const stan = nats.connect("ticketing", "abc", {
-  url: "http://localhost:4222",
+const stan = nats.connect('ticketing', 'abc', {
+  url: 'http://localhost:4222',
 });
 
-stan.on("connect", async () => {
-  console.log("Publisher connected to NATS");
+stan.on('connect', async () => {
+  console.log('Publisher connected to NATS');
 
-  // we can only share raw data or plain string
-  //cannot share js object
-  const data = {
-    id: "123",
-    title: "concert",
-    price: 20,
-    userId: "Hari",
-  };
   const publisher = new TicketCreatedPublisher(stan);
   try {
-    // publishes the data to the subject channel
-    await publisher.publish(data);
+    await publisher.publish({
+      id: '123',
+      title: 'concert',
+      price: 20,
+    });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
+
+  // const data = JSON.stringify({
+  //   id: '123',
+  //   title: 'concert',
+  //   price: '$20',
+  // });
+
+  // stan.publish('TicketCreated', data, () => {
+  //   console.log('Event published');
+  // });
 });

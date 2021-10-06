@@ -3,49 +3,34 @@ kind: Deployment
 metadata:
   name: auth-depl
 spec:
-  # copies of images to run
   replicas: 1
-  # helps find deployment find the pods with the label name
   selector:
     matchLabels:
       app: auth
-  # how to create each individual pods that this deployment will create
   template:
     metadata:
       labels:
-        # this app name has to match the app name that of selector
         app: auth
-    # tells pod how to behave
     spec:
       containers:
-        # this is only for logging purposes
         - name: auth
-          # our custom build images
-          image: apahadi73/auth
+          image: cygnetops/auth
           env:
             - name: MONGO_URI
-              # not an issue since we are not using credentials to use the mongodb server
-              value: "mongodb://auth-mongo-srv:27017/auth"
+              value: 'mongodb://auth-mongo-srv:27017/auth'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-
 ---
-# most of the time, we create one-to-one relation between service and deployment
 apiVersion: v1
 kind: Service
 metadata:
   name: auth-srv
-
 spec:
-  # by default, cluster ip service is created
-  # so we did not define the type of service
   selector:
-    # finds all the pods with app name "auth"
     app: auth
-  # lists all the ports that we have to access to in this pod
   ports:
     - name: auth
       protocol: TCP

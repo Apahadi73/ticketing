@@ -1,8 +1,6 @@
-import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../errors/custom-error";
-// we make this file to send uniform error object to the frontend side
-// the function has to have following four arguments
-// error handling middleware that's why we have err parameter in the function
+import { Request, Response, NextFunction } from 'express';
+import { CustomError } from '../errors/custom-error';
+
 export const errorHandler = (
   err: Error,
   req: Request,
@@ -15,6 +13,6 @@ export const errorHandler = (
 
   console.error(err);
   res.status(400).send({
-    errors: [{ message: "Something went wrong" }],
+    errors: [{ message: 'Something went wrong' }],
   });
 };

@@ -1,12 +1,10 @@
-import { currentUser } from "@mgktickets/common";
-import express, { Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import express from 'express';
+import { currentUser } from '@cygnetops/common';
 
 const router = express.Router();
 
-router.get("/api/users/currentUser", currentUser, (req, res) => {
+router.get('/api/users/currentuser', currentUser, (req, res) => {
   res.send({ currentUser: req.currentUser || null });
 });
 
-// we are renaming the router to avoid name collisions
 export { router as currentUserRouter };

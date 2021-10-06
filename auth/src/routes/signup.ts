@@ -1,53 +1,44 @@
-import express, { Request, Response } from "express";
-import { body } from "express-validator";
-import jwt from "jsonwebtoken";
-import { validatesRequest, BadRequestError } from "@mgktickets/common";
-import { User } from "../models/user";
+import express, { Request, Response } from 'express';
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { validateRequest, BadRequestError } from '@cygnetops/common';
+
+import { User } from '../models/user';
+
 const router = express.Router();
 
 router.post(
-  "/api/users/signup",
+  '/api/users/signup',
   [
-    // we use the body middleware to validate the body of the request body
-    body("email").isEmail().withMessage("Invalid Email"),
-    body("password")
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('password')
       .trim()
       .isLength({ min: 4, max: 20 })
-      .withMessage("Password must be between 4  to 20 character in length."),
+      .withMessage('Password must be between 4 and 20 characters'),
   ],
-  // validates the request after the previous middleware
-  // but before the final middleware
-  validatesRequest,
+  validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    // checks if the user already exists in the db
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
-      // throw this error when the server receivesd bad request from the frontend
-      throw new BadRequestError("Email in use");
+      throw new BadRequestError('Email in use');
     }
 
-    const user = User.build({
-      email,
-      password,
-    });
-
-    // saves to db
+    const user = User.build({ email, password });
     await user.save();
 
-    // Generates JWT
+    // Generate JWT
     const userJwt = jwt.sign(
-      // payload
       {
         id: user.id,
         email: user.email,
       },
-      // secret key
       process.env.JWT_KEY!
     );
 
-    // Stores it on the session object
+    // Store it on session object
     req.session = {
       jwt: userJwt,
     };
@@ -56,5 +47,4 @@ router.post(
   }
 );
 
-// we are renaming the router to avoid name collisions
 export { router as signupRouter };

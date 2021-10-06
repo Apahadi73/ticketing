@@ -1,24 +1,19 @@
-import axios from "axios";
-import { useState } from "react";
+import axios from 'axios';
+import { useState } from 'react';
 
-const useRequest = ({ url, method, body, onSuccess }) => {
-  // method here must be "GET","POST","PATCH","PUT"
-
+export default ({ url, method, body, onSuccess }) => {
   const [errors, setErrors] = useState(null);
 
-  // executes the request
-  const doRequest = async () => {
+  const doRequest = async (props = {}) => {
     try {
       setErrors(null);
-      const response = await axios[method](url, body);
+      const response = await axios[method](url, { ...body, ...props });
 
       if (onSuccess) {
         onSuccess(response.data);
       }
 
       return response.data;
-
-      // we receive array of errors from the backend
     } catch (err) {
       setErrors(
         <div className="alert alert-danger">
@@ -35,5 +30,3 @@ const useRequest = ({ url, method, body, onSuccess }) => {
 
   return { doRequest, errors };
 };
-
-export default useRequest;
